@@ -1,15 +1,37 @@
 # wait-for-docker-image-action [![e2e](https://github.com/int128/wait-for-docker-image-action/actions/workflows/e2e.yaml/badge.svg)](https://github.com/int128/wait-for-docker-image-action/actions/workflows/e2e.yaml)
 
-This is an action to ensure a Docker image of the current Git revision is available.
-It is useful for an end-to-end test with built image.
+This is an action to ensure a Docker image is available at the current Git revision.
+It is useful for an end-to-end test with docker build in GitHub Actions.
 
-## Getting Started
+## Problem to solve
 
-This action is designed for [OCI annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
-It waits until `org.opencontainers.image.revision` annotation is the current Git revision.
-You can generate the annotations using [docker/metadata-action](https://github.com/docker/metadata-action).
+For building and testing a Docker image in GitHub Actions, typical workflow would be like:
+
+1. Build job
+2. Test job (after build)
+
+However, if the test job takes a long time to prepare an environment, it would be nice to run build and prepare in parallel.
+For example,
+
+- Install packages using `apt-get install`
+- Create a Kubernetes cluster using `kind`
+- Deploy components using `kubectl`
+
+The workflow can be run in parallel, like:
+
+- Build job
+- Test job
+    1. Prepare an environment
+    2. Wait for the image (this action provides this step)
+    3. Run the test
+
+This action waits until `org.opencontainers.image.revision` annotation of the Docker image is the current Git revision.
+You can generate [OCI annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys) using [docker/metadata-action](https://github.com/docker/metadata-action).
+
+## Example
 
 Here is an example workflow.
+It builds an Docker image and tests it.
 
 ```yaml
 name: e2e-test
@@ -30,7 +52,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v3
-        id: build
         with:
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
@@ -57,15 +78,19 @@ jobs:
 
       # Write your test here
       - run: make -C e2e-test test
+        env:
+          TARGET_IMAGE: ${{ steps.metadata.outputs.tags }}
 ```
 
 ## Specification
 
+This actions depends on `docker pull` and `docker image inspect` command.
+
 ### Inputs
 
-| Name                | Default      | Description                    |
-| ------------------- | ------------ | ------------------------------ |
-| `tags`              | (required)   | Docker image tags              |
-| `expected-revision` | `github.sha` | Expected Git revision of image |
-| `timeout-seconds`   | 300          | Timeout                        |
-| `polling-seconds`   | 3            | Polling interval               |
+| Name                | Default      | Description                           |
+| ------------------- | ------------ | ------------------------------------- |
+| `tags`              | (required)   | Docker image tags                     |
+| `expected-revision` | `github.sha` | Expected Git revision of Docker image |
+| `timeout-seconds`   | 300          | Timeout                               |
+| `polling-seconds`   | 3            | Polling interval                      |
