@@ -6,6 +6,7 @@ const main = async (): Promise<void> => {
     tags: core.getMultilineInput('tags', { required: true }),
     expectedRevision: core.getInput('expected-revision', { required: true }),
     timeoutSeconds: parseInt(core.getInput('timeout-seconds', { required: true })),
+    pollingSeconds: parseInt(core.getInput('polling-seconds', { required: true })),
   })
 }
 

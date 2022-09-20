@@ -5,25 +5,18 @@ type Inputs = {
   tags: string[]
   expectedRevision: string
   timeoutSeconds: number
+  pollingSeconds: number
 }
 
 export const run = async (inputs: Inputs): Promise<void> => {
-  const ok = await retry(() => checkIfDockerImageRevisionIsExpected(inputs), inputs.timeoutSeconds * 1000, 3000)
+  const ok = await retry(
+    () => checkIfDockerImageRevisionIsExpected(inputs),
+    inputs.timeoutSeconds * 1000,
+    inputs.pollingSeconds * 1000
+  )
   if (!ok) {
     throw new Error(`timed out until the Docker image is available`)
   }
-}
-
-export const retry = async (satisfied: () => Promise<boolean>, timeout: number, polling: number): Promise<boolean> => {
-  const startedAt = Date.now()
-  while ((await satisfied()) === false) {
-    await new Promise((resolve) => setTimeout(resolve, polling))
-    const elapsed = Date.now() - startedAt
-    if (elapsed > timeout) {
-      return false
-    }
-  }
-  return true
 }
 
 const checkIfDockerImageRevisionIsExpected = async (inputs: Inputs): Promise<boolean> => {
@@ -49,4 +42,16 @@ const getDockerImageRevision = async (tag: string): Promise<string | undefined> 
     tag,
   ])
   return output.stdout.trim()
+}
+
+export const retry = async (satisfied: () => Promise<boolean>, timeout: number, polling: number): Promise<boolean> => {
+  const startedAt = Date.now()
+  while ((await satisfied()) === false) {
+    await new Promise((resolve) => setTimeout(resolve, polling))
+    const elapsed = Date.now() - startedAt
+    if (elapsed > timeout) {
+      return false
+    }
+  }
+  return true
 }

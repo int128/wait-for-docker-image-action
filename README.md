@@ -68,3 +68,4 @@ jobs:
 | `tags`              | (required)   | Docker image tags              |
 | `expected-revision` | `github.sha` | Expected Git revision of image |
 | `timeout-seconds`   | 300          | Timeout                        |
+| `polling-seconds`   | 3            | Polling interval               |

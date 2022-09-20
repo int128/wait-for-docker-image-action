@@ -13,6 +13,10 @@ inputs:
     description: timeout in seconds
     required: true
     default: '300'
+  polling-seconds:
+    description: polling interval in seconds
+    required: true
+    default: '3'
 
 runs:
   using: 'node16'
