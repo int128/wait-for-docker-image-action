@@ -3,7 +3,9 @@ import { run } from './run'
 
 const main = async (): Promise<void> => {
   await run({
-    name: core.getInput('name', { required: true }),
+    tags: core.getMultilineInput('tags', { required: true }),
+    expectedRevision: core.getInput('expected-revision', { required: true }),
+    timeoutSeconds: parseInt(core.getInput('timeout-seconds', { required: true })),
   })
 }
 
