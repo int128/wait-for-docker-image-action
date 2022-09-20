@@ -1,103 +1,70 @@
-# typescript-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
+# wait-for-docker-image-action [![e2e](https://github.com/int128/wait-for-docker-image-action/actions/workflows/e2e.yaml/badge.svg)](https://github.com/int128/wait-for-docker-image-action/actions/workflows/e2e.yaml)
 
-This is a template of TypeScript action.
-Inspired from https://github.com/actions/typescript-action.
-
-
-## Features
-
-- Ready to develop with the minimum configs
-  - Yarn
-  - Prettier
-  - ESLint
-  - tsconfig
-  - Jest
-- Automated continuous release
-- Keep consistency of generated files
-- Shipped with Renovate config
-
+This is an action to ensure a Docker image of the current Git revision is available.
+It is useful for an end-to-end test with built image.
 
 ## Getting Started
 
-Click `Use this template` to create a repository.
+This action is designed for [OCI annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys).
+It waits until `org.opencontainers.image.revision` annotation is the current Git revision.
+You can generate the annotations using [docker/metadata-action](https://github.com/docker/metadata-action).
 
-An initial release `v0.0.0` is automatically created by GitHub Actions.
-You can see the generated files in `dist` directory on the tag.
-
-Then checkout your repository and test it. Node.js is required.
-
-```console
-$ git clone https://github.com/your/repo.git
-
-$ yarn
-$ yarn test
-```
-
-Create a pull request for a change.
-
-```console
-$ git checkout -b feature
-$ git commit -m 'Add feature'
-$ gh pr create -fd
-```
-
-Once you merge a pull request, a new minor release (such as `v0.1.0`) is created.
-
-
-### Stable release
-
-When you want to create a stable release, change the major version in [release workflow](.github/workflows/release.yaml).
+Here is an example workflow.
 
 ```yaml
-      - uses: int128/release-typescript-action@v1
-        with:
-          major-version: 1
-```
+name: e2e-test
 
-Then a new stable release `v1.0.0` is created.
-
-
-## Specification
-
-To run this action, create a workflow as follows:
-
-```yaml
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: int128/typescript-action@v1
+      - uses: actions/checkout@v3
+      - uses: docker/metadata-action@v4
+        id: metadata
         with:
-          name: hello
+          images: ghcr.io/${{ github.repository }}
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v3
+        id: build
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+
+      # Prepare a test environment,
+      # for example, create a Kubernetes cluster or set up middlewares
+      - run: make -C e2e-test setup
+
+      # Wait for the image
+      - uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: ghcr.io/${{ github.repository }}
+      - uses: int128/wait-for-docker-image-action@v1
+        with:
+          tags: ${{ steps.metadata.outputs.tags }}
+
+      # Write your test here
+      - run: make -C e2e-test test
 ```
+
+## Specification
 
 ### Inputs
 
-| Name | Default | Description
-|------|----------|------------
-| `name` | (required) | example input
-
-
-### Outputs
-
-| Name | Description
-|------|------------
-| `example` | example output
-
-
-## Development
-
-### Release workflow
-
-When a pull request is merged into main branch, a new minor release is created by GitHub Actions.
-See https://github.com/int128/release-typescript-action for details.
-
-### Keep consistency of generated files
-
-If a pull request needs to be fixed by Prettier, an additional commit to fix it will be added by GitHub Actions.
-See https://github.com/int128/update-generated-files-action for details.
-
-### Dependency update
-
-You can enable Renovate to update the dependencies.
-This repository is shipped with the config https://github.com/int128/typescript-action-renovate-config.
+| Name                | Default      | Description                    |
+| ------------------- | ------------ | ------------------------------ |
+| `tags`              | (required)   | Docker image tags              |
+| `expected-revision` | `github.sha` | Expected Git revision of image |
+| `timeout-seconds`   | 300          | Timeout                        |
