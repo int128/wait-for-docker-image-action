@@ -12,7 +12,7 @@ inputs:
   timeout-seconds:
     description: timeout in seconds
     required: true
-    default: '300'
+    default: '600'
   polling-seconds:
     description: polling interval in seconds
     required: true
