@@ -16,7 +16,7 @@ inputs:
   polling-seconds:
     description: polling interval in seconds
     required: true
-    default: '3'
+    default: '5'
 
 runs:
   using: 'node16'

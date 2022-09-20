@@ -93,4 +93,4 @@ This actions depends on `docker pull` and `docker image inspect` command.
 | `tags`              | (required)   | Docker image tags                     |
 | `expected-revision` | `github.sha` | Expected Git revision of Docker image |
 | `timeout-seconds`   | 600          | Timeout                               |
-| `polling-seconds`   | 3            | Polling interval                      |
+| `polling-seconds`   | 5            | Polling interval                      |
