@@ -8,7 +8,7 @@ inputs:
   expected-revision:
     description: expected Git revisions (multi-line string)
     required: true
-    default: |
+    default: |-
       ${{ github.sha }}
       ${{ github.event.pull_request.head.sha }}
   timeout-seconds:
