@@ -6,9 +6,11 @@ inputs:
     description: Docker tags (multi-line string)
     required: true
   expected-revision:
-    description: expected Git revision
+    description: expected Git revisions (multi-line string)
     required: true
-    default: ${{ github.sha }}
+    default: |
+      ${{ github.sha }}
+      ${{ github.event.pull_request.head.sha }}
   timeout-seconds:
     description: timeout in seconds
     required: true

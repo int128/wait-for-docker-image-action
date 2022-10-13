@@ -3,7 +3,7 @@ import * as exec from '@actions/exec'
 
 type Inputs = {
   tags: string[]
-  expectedRevision: string
+  expectedRevisions: string[]
   timeoutSeconds: number
   pollingSeconds: number
 }
@@ -22,9 +22,10 @@ export const run = async (inputs: Inputs): Promise<void> => {
 const checkIfDockerImageRevisionIsExpected = async (inputs: Inputs): Promise<boolean> => {
   for (const tag of inputs.tags) {
     const revision = await getDockerImageRevision(tag)
-    if (revision !== inputs.expectedRevision) {
-      return false
+    if (revision && inputs.expectedRevisions.includes(revision)) {
+      continue
     }
+    return false
   }
   return true
 }
