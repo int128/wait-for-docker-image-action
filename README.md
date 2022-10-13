@@ -88,9 +88,13 @@ This actions depends on `docker pull` and `docker image inspect` command.
 
 ### Inputs
 
-| Name                | Default      | Description                           |
-| ------------------- | ------------ | ------------------------------------- |
-| `tags`              | (required)   | Docker image tags                     |
-| `expected-revision` | `github.sha` | Expected Git revision of Docker image |
-| `timeout-seconds`   | 600          | Timeout                               |
-| `polling-seconds`   | 5            | Polling interval                      |
+| Name                | Default     | Description                            |
+| ------------------- | ----------- | -------------------------------------- |
+| `tags`              | (required)  | Docker image tags                      |
+| `expected-revision` | (see below) | Expected Git revisions of Docker image |
+| `timeout-seconds`   | 600         | Timeout                                |
+| `polling-seconds`   | 5           | Polling interval                       |
+
+By default, this action waits until the revision is `github.sha` or `github.event.pull_request.head.sha`.
+Since [docker/metadata-action@v4.1.0](https://github.com/docker/metadata-action/releases/tag/v4.1.0),
+it generates the head sha on pull request event (see also [the issue](https://github.com/docker/metadata-action/issues/206)).
