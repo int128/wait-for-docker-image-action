@@ -12,7 +12,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
   const ok = await retry(
     () => checkIfDockerImageRevisionIsExpected(inputs),
     inputs.timeoutSeconds * 1000,
-    inputs.pollingSeconds * 1000
+    inputs.pollingSeconds * 1000,
   )
   if (!ok) {
     throw new Error(`timed out until the Docker image is available`)
