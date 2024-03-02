@@ -1,23 +1,21 @@
 name: ts
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - src/**
-      - tests/**
-      - '*.json'
-      - '*.lock'
-      - action.yaml
-      - .github/workflows/ts.yaml
   pull_request:
-    branches: [main]
     paths:
       - src/**
       - tests/**
       - '*.json'
-      - '*.lock'
-      - action.yaml
+      - '*.yaml'
+      - .github/workflows/ts.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+      - tests/**
+      - '*.json'
+      - '*.yaml'
       - .github/workflows/ts.yaml
 
 jobs:
