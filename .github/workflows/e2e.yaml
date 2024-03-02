@@ -1,19 +1,21 @@
 name: e2e
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - src/**
-      - tests/fixtures/**
-      - action.yaml
-      - .github/workflows/e2e.yaml
   pull_request:
-    branches: [main]
     paths:
       - src/**
       - tests/fixtures/**
-      - action.yaml
+      - '*.json'
+      - '*.yaml'
+      - .github/workflows/e2e.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+      - tests/fixtures/**
+      - '*.json'
+      - '*.yaml'
       - .github/workflows/e2e.yaml
 
 jobs:
