@@ -1,19 +1,21 @@
 name: e2e
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - src/**
-      - tests/fixtures/**
-      - action.yaml
-      - .github/workflows/e2e.yaml
   pull_request:
-    branches: [main]
     paths:
       - src/**
       - tests/fixtures/**
-      - action.yaml
+      - '*.json'
+      - '*.yaml'
+      - .github/workflows/e2e.yaml
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+      - tests/fixtures/**
+      - '*.json'
+      - '*.yaml'
       - .github/workflows/e2e.yaml
 
 jobs:
@@ -47,10 +49,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
-      - run: yarn
-      - run: yarn build
-      - run: yarn package
+      - run: corepack enable pnpm
+      - run: pnpm i
+      - run: pnpm build
 
       - uses: docker/metadata-action@v5
         id: metadata
