@@ -1,4 +1,4 @@
-import { retry } from '../src/run'
+import { retry } from '../src/run.js'
 
 describe('retry', () => {
   test('suceeded', async () => {
