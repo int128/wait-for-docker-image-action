@@ -28,7 +28,7 @@ importers:
         specifier: 0.38.1
         version: 0.38.1
       '@vitest/eslint-plugin':
-        specifier: ^1.2.5
+        specifier: 1.2.5
         version: 1.2.5(eslint@9.2.0)(typescript@5.4.5)(vitest@3.2.3(@types/node@20.12.12))
       eslint:
         specifier: 9.2.0
@@ -46,7 +46,7 @@ importers:
         specifier: 7.9.0
         version: 7.9.0(eslint@9.2.0)(typescript@5.4.5)
       vitest:
-        specifier: ^3.2.3
+        specifier: 3.2.3
         version: 3.2.3(@types/node@20.12.12)
 
 packages:
@@ -1444,7 +1444,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.34.0(typescript@5.4.5)
       '@typescript-eslint/types': 8.34.0
-      debug: 4.3.4
+      debug: 4.4.1
       typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
@@ -1500,7 +1500,7 @@ snapshots:
       '@typescript-eslint/tsconfig-utils': 8.34.0(typescript@5.4.5)
       '@typescript-eslint/types': 8.34.0
       '@typescript-eslint/visitor-keys': 8.34.0
-      debug: 4.3.4
+      debug: 4.4.1
       fast-glob: 3.3.2
       is-glob: 4.0.3
       minimatch: 9.0.4
