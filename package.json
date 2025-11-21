@@ -16,6 +16,6 @@
     "@vercel/ncc": "0.38.1",
     "pnpm": "10.20.0",
     "typescript": "5.4.5",
-    "vitest": "4.0.8"
+    "vitest": "4.0.9"
   }
 }
