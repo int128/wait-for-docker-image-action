@@ -16,7 +16,7 @@
     "@types/node": "20.12.12",
     "@vercel/ncc": "0.38.1",
     "pnpm": "10.26.1",
-    "typescript": "5.4.5",
+    "typescript": "5.9.3",
     "vitest": "4.0.16"
   }
 }
