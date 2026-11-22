@@ -21,9 +21,9 @@ The workflow can be run in parallel, like:
 
 - Build job
 - Test job
-    1. Prepare an environment
-    2. Wait for the image (this action provides this step)
-    3. Run the test
+  1. Prepare an environment
+  2. Wait for the image (this action provides this step)
+  3. Run the test
 
 This action waits until `org.opencontainers.image.revision` annotation of the Docker image is the current Git revision.
 You can generate [OCI annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys) using [docker/metadata-action](https://github.com/docker/metadata-action).
