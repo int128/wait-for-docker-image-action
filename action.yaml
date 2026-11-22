@@ -14,12 +14,12 @@ inputs:
   timeout-seconds:
     description: timeout in seconds
     required: true
-    default: '600'
+    default: "600"
   polling-seconds:
     description: polling interval in seconds
     required: true
-    default: '5'
+    default: "5"
 
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: "node24"
+  main: "dist/index.js"
